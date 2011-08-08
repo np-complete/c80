@@ -5,12 +5,13 @@ require 'rubygems'
 require 'prawn'
 
 doc_settings = {
-  :margin => 45,
-  :page_size => 'A5',
+  :margin => 30,
+  :page_size => 'B5',
   :info => {
     :Title => "あずにゃんとペアプロしてる気分になれる薄い本",
     :Author => "まさらっき",
-    :Creator => "NP-complete"
+    :Creator => "NP-complete",
+    :CreationDate => Time.parse("2011/8/13 10:00")
   }
 }
 
