@@ -29,7 +29,7 @@ end
 
 def title(str, options = nil)
   text str, {:align => :center, :character_spacing => 4, :size => 20}.merge(options || {})
-  move_down 40
+  move_down 14
 end
 
 def maegaki
@@ -133,9 +133,9 @@ def story(id)
   end
 
   if File.exists?("#{id}.txt")
-    move_down 8
-    text "解説", :styles => [:bold], :size => 16
     move_down 4
+    text "解説", :styles => [:bold], :size => 8
+    move_down 2
     text File.open("#{id}.txt").read
   end
   move_down 24
@@ -143,6 +143,8 @@ end
 
 Prawn::Document.generate('test.pdf', doc_settings) do
   font "/usr/share/fonts/truetype/ipafont/ipag.ttf"
+  font_size 11
+  default_leading 2
   maegaki
   start_new_page
   1.upto(18) do |id|
