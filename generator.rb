@@ -17,8 +17,9 @@ doc_settings = {
 
 def parse(message)
   message.lines.map {|line|
-    if line =~ /^\$/
-     line
+    if line =~ /^(\$[\w -_:\/]+)(.*)/
+      #      line = "<font name=\"Courier\">#{$1}</font>#{$2}"
+      line = "#{$1}#{$2}"
     end
     line
   }.join
