@@ -124,7 +124,7 @@ def dialog(image_file, message)
 end
 
 def story(id)
-  start_new_page
+#  start_new_page
 
   document = Nokogiri::HTML(open("http://ss-park.net/stories/#{id}").read)
   title  document.css("#main h1").first.text
@@ -135,12 +135,23 @@ def story(id)
     message = dialog.css("p").first.text
     dialog "/home/masaki/Pictures/ruby.png", message
   end
+
+  if File.exists?("#{id}.txt")
+    move_down 8
+    text "解説", :styles => [:bold], :size => 16
+    move_down 4
+    text File.open("#{id}.txt").read
+  end
+  move_down 24
 end
 
 Prawn::Document.generate('test.pdf', doc_settings) do
   font "/usr/share/fonts/truetype/ipafont/ipag.ttf"
   maegaki
-  story(1)
+  start_new_page
+  1.upto(18) do |id|
+    story(id)
+  end
 
   atogaki
   okutuke
