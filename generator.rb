@@ -122,16 +122,20 @@ end
 
 def story(id)
   start_new_page
-  title "第0話 ドッグフードを食べる"
-  dialog "/home/masaki/Dropbox/picture/azusa_normal.png", parse(
-    "律先輩、ドックフードを食べてください\n" +
-    "$rails new hoge うんこ\n")
-  dialog "/home/masaki/Dropbox/picture/ritsu_normal.png", "testtest\n" + "unkounko"
+
+  document = Nokogiri::HTML(open("http://ss-park.net/stories/#{id}").read)
+  title  document.css("#main h1").first.text
+
+  dialogs = document.css("#main .dialog")
+  dialogs.each do |dialog|
+    image_file =  dialog.css("img").first[:src]
+    message = dialog.css("p").first.text
+    dialog "/home/masaki/Pictures/ruby.png", message
+  end
 end
 
 Prawn::Document.generate('test.pdf', doc_settings) do
   font "/usr/share/fonts/truetype/ipafont/ipag.ttf"
-
   maegaki
   story(1)
 
