@@ -102,24 +102,20 @@ def okutuke
 end
 
 def dialog(image_file, message)
-  image_size = 32
+  image_size = 28
   c_before = cursor
   c_image = cursor - image_size
   if c_before < image_size
+   # p "new page #{message}"
     start_new_page
     dialog(image_file, message)
   else
-    bounding_box [image_size + 8, cursor], :width => 432 - image_size, :overflow => :expand do
-      text parse(message), :inline_format => true
-    end
+    image image_file, :width => image_size, :at => [0, c_before]
+    text parse(message), :inline_format => true, :margin_left => image_size + 4
     c_text = cursor
-    if cursor < 0
-      start_new_page
-      dialog(image_file, message)
-    else
-      image image_file, :width => image_size, :at => [0, c_before]
-    end
-    move_down cursor - ([c_text, c_image].min - 12)
+   # p "message = #{message}, c_before = #{c_before}, c_text = #{c_text}, c_image = #{c_image}"
+    down_weight = [c_text, c_image].min - image_size / 3
+    move_down cursor - down_weight if down_weight > 0
   end
 end
 
