@@ -3,6 +3,8 @@
 
 require 'rubygems'
 require 'prawn'
+require 'nokogiri'
+require 'open-uri'
 
 doc_settings = {
   :margin => 30,
@@ -93,12 +95,29 @@ end
 
 def dialog(image_file, message)
   image_size = 32
-  image(image_file, :width => image_size)
-
-  bounding_box [image_size + 8, cursor + image_size], :width => 332 - image_size do
-    text message
+  c_before = cursor
+  c_image = cursor - image_size
+  if c_before < image_size
+    p "start new page by over image #{message}"
+    start_new_page
+    dialog(image_file, message)
+  else
+    #  group do
+    #text_box parse(message), :inline_format => true, :at => [image_size + 8, cursor], :width => 432 - image_size, :height => image_size, :overflow => :expand
+    bounding_box [image_size + 8, cursor], :width => 432 - image_size, :overflow => :expand do
+      text parse(message), :inline_format => true
+    end
+    c_text = cursor
+    p "c_before = #{c_before} c_image = #{c_image}, c_text = #{c_text} "
+    if cursor < 0
+      p "start new page by over text #{message}"
+      start_new_page
+      dialog(image_file, message)
+    else
+      image image_file, :width => image_size, :at => [0, c_before]
+    end
+    move_down cursor - ([c_text, c_image].min - 12)
   end
-  move_down 4
 end
 
 def story(id)
