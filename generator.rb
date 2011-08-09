@@ -73,6 +73,10 @@ http://github.com/np-complete/ss_editor
 今後も開発風景をダダ流ししていくので興味があれば覗いてみてください。
 http://com.nicovideo.jp/community/co600306
 TXT
+  move_down 15
+  text "Enjoy Programming!", :size => 14, :align => :right
+  move_down 2
+  text "まさらっき", :size => 14, :align => :right
 end
 
 def okutuke
@@ -133,9 +137,9 @@ def story(id)
 
   dialogs = document.css("#main .dialog")
   dialogs.each do |dialog|
-    image_file =  dialog.css("img").first[:src]
+    image_file =  File.join("images", File.basename(dialog.css("img").first[:src])).gsub(/\?.*/,'')
     message = dialog.css(".message").first.text
-    dialog "/home/masaki/Pictures/ruby.png", message
+    dialog image_file, message
   end
 
   if File.exists?("text/#{id}.txt")
