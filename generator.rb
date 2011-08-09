@@ -138,11 +138,11 @@ def story(id)
     dialog "/home/masaki/Pictures/ruby.png", message
   end
 
-  if File.exists?("#{id}.txt")
+  if File.exists?("text/#{id}.txt")
 #    move_down 4
     text "解説", :styles => [:bold], :size => 8
     move_down 2
-    text File.open("#{id}.txt").read
+    text File.open("text/#{id}.txt").read
   end
   move_down 24
 end
