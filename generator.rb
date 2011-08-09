@@ -106,16 +106,22 @@ def dialog(image_file, message)
   c_before = cursor
   c_image = cursor - image_size
   if c_before < image_size
-   # p "new page #{message}"
+    #p "new page #{message}"
     start_new_page
     dialog(image_file, message)
   else
     image image_file, :width => image_size, :at => [0, c_before]
     text parse(message), :inline_format => true, :margin_left => image_size + 4
     c_text = cursor
-   # p "message = #{message}, c_before = #{c_before}, c_text = #{c_text}, c_image = #{c_image}"
     down_weight = [c_text, c_image].min - image_size / 3
-    move_down cursor - down_weight if down_weight > 0
+    # p "message = #{message}, c_before = #{c_before}, c_text = #{c_text}, c_image = #{c_image}, down = #{down_weight}"
+    if c_before < c_text
+      image_size / 3
+    elsif down_weight > 0
+      move_down cursor - down_weight
+    else
+      start_new_page
+    end
   end
 end
 
@@ -128,12 +134,12 @@ def story(id)
   dialogs = document.css("#main .dialog")
   dialogs.each do |dialog|
     image_file =  dialog.css("img").first[:src]
-    message = dialog.css("p").first.text
+    message = dialog.css(".message").first.text
     dialog "/home/masaki/Pictures/ruby.png", message
   end
 
   if File.exists?("#{id}.txt")
-    move_down 4
+#    move_down 4
     text "解説", :styles => [:bold], :size => 8
     move_down 2
     text File.open("#{id}.txt").read
@@ -141,16 +147,23 @@ def story(id)
   move_down 24
 end
 
+def fin
+  start_new_page
+  text "あずにゃんとペアプロしてる気分になれる薄い本", :align => :center
+  text "- 完 -", :align => :center
+
+  text "しかし開発はまだまだ続く\n<= TO BE CONTINUED." , :align => :right, :valign => :bottom
+end
 Prawn::Document.generate('test.pdf', doc_settings) do
   font "/usr/share/fonts/truetype/ipafont/ipag.ttf"
   font_size 11
   default_leading 2
   maegaki
   start_new_page
-  1.upto(18) do |id|
+  1.upto(19) do |id|
     story(id)
   end
-
+  fin
   atogaki
   okutuke
 end
