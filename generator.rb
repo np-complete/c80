@@ -33,6 +33,7 @@ def title(str, options = nil)
 end
 
 def maegaki
+  start_new_page
   move_down 200
   options = {:align => :center, :size => 14, :character_spacing => 2}
   text "この物語は、Railsプログラマの", options
@@ -158,10 +159,27 @@ def fin
 
   text "しかし開発はまだまだ続く\n<= TO BE CONTINUED." , :align => :right, :valign => :bottom
 end
+
+def hyoshi
+  move_down 60
+  text "あずにゃんと\nペアプロしてる気分になれる\n薄い本", :size => 60
+  move_down 220
+  text "NP-complete", :align => :right, :size => 28
+  start_new_page
+end
+
+def urabyoshi
+  start_new_page
+  start_new_page
+  text "あずにゃんとペアプロしてる気分になれる薄い本 / NP-complete", :align => :right, :valign => :bottom
+end
+
 Prawn::Document.generate('test.pdf', doc_settings) do
   font "/usr/share/fonts/truetype/ipafont/ipag.ttf"
   font_size 11
   default_leading 2
+  hyoshi
+
   maegaki
   start_new_page
   1.upto(19) do |id|
@@ -170,4 +188,6 @@ Prawn::Document.generate('test.pdf', doc_settings) do
   fin
   atogaki
   okutuke
+
+  urabyoshi
 end
